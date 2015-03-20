@@ -3,7 +3,6 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
 CREATE SCHEMA IF NOT EXISTS `FinancialMarkets` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
-SHOW WARNINGS;
 USE `FinancialMarkets` ;
 
 -- -----------------------------------------------------
@@ -12,21 +11,21 @@ USE `FinancialMarkets` ;
 CREATE TABLE IF NOT EXISTS `FinancialMarkets`.`Security` (
   `isin` CHAR(12) NOT NULL,
   `name` VARCHAR(64) NOT NULL,
+  `abbrevation` VARCHAR(3) NOT NULL,
   PRIMARY KEY (`isin`))
 ENGINE = InnoDB;
 
-SHOW WARNINGS;
 
 -- -----------------------------------------------------
 -- Table `FinancialMarkets`.`Market`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `FinancialMarkets`.`Market` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(32) NOT NULL,
+  `symbol` CHAR(2) NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
-SHOW WARNINGS;
 
 -- -----------------------------------------------------
 -- Table `FinancialMarkets`.`Open`
@@ -34,8 +33,9 @@ SHOW WARNINGS;
 CREATE TABLE IF NOT EXISTS `FinancialMarkets`.`Open` (
   `isin` CHAR(12) NOT NULL,
   `marketId` INT NOT NULL,
+  `date` DATE NOT NULL,
   `amount` DECIMAL(8,2) UNSIGNED NOT NULL,
-  PRIMARY KEY (`isin`, `marketId`),
+  PRIMARY KEY (`isin`, `marketId`, `date`),
   INDEX `fk_Open_Market1_idx` (`marketId` ASC),
   CONSTRAINT `fk_Open_Security`
     FOREIGN KEY (`isin`)
@@ -49,7 +49,6 @@ CREATE TABLE IF NOT EXISTS `FinancialMarkets`.`Open` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-SHOW WARNINGS;
 
 -- -----------------------------------------------------
 -- Table `FinancialMarkets`.`High`
@@ -72,7 +71,6 @@ CREATE TABLE IF NOT EXISTS `FinancialMarkets`.`High` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-SHOW WARNINGS;
 
 -- -----------------------------------------------------
 -- Table `FinancialMarkets`.`Low`
@@ -95,7 +93,6 @@ CREATE TABLE IF NOT EXISTS `FinancialMarkets`.`Low` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-SHOW WARNINGS;
 
 -- -----------------------------------------------------
 -- Table `FinancialMarkets`.`Close`
@@ -118,7 +115,6 @@ CREATE TABLE IF NOT EXISTS `FinancialMarkets`.`Close` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-SHOW WARNINGS;
 
 -- -----------------------------------------------------
 -- Table `FinancialMarkets`.`Volume`
@@ -142,7 +138,6 @@ CREATE TABLE IF NOT EXISTS `FinancialMarkets`.`Volume` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-SHOW WARNINGS;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
