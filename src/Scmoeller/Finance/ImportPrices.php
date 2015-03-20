@@ -8,6 +8,9 @@
 
 namespace Scmoeller\Finance;
 
+use DateTime;
+use Exception;
+
 /**
  * Description of newPHPClass
  *
@@ -15,17 +18,39 @@ namespace Scmoeller\Finance;
  */
 class ImportPrices 
 {
-    protected $symbol;
+    /**
+     *
+     * @var Security
+     */
+    protected $security;
     
+    /**
+     *
+     * @var Market
+     */
     protected $market;
     
+    /**
+     *
+     * @var DateTime
+     */
     protected $startDate;
     
+    /**
+     *
+     * @var DateTime
+     */
     protected $endDate;
     
-    public function __construct($symbol, $market, $startDate, $endDate) 
+    public function __construct(Security $security, Market $market, DateTime $startDate, DateTime $endDate) 
     {
+        $this->security = $security;
+    
+        $this->market = $market;
         
+        $this->startDate = $startDate;
+        
+        $this->endDate = $endDate;
     }
 
     /**
