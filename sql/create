@@ -1,0 +1,149 @@
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+
+CREATE SCHEMA IF NOT EXISTS `FinancialMarkets` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
+SHOW WARNINGS;
+USE `FinancialMarkets` ;
+
+-- -----------------------------------------------------
+-- Table `FinancialMarkets`.`Security`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `FinancialMarkets`.`Security` (
+  `isin` CHAR(12) NOT NULL,
+  `name` VARCHAR(64) NOT NULL,
+  PRIMARY KEY (`isin`))
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `FinancialMarkets`.`Market`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `FinancialMarkets`.`Market` (
+  `id` INT NOT NULL,
+  `name` VARCHAR(32) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `FinancialMarkets`.`Open`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `FinancialMarkets`.`Open` (
+  `isin` CHAR(12) NOT NULL,
+  `marketId` INT NOT NULL,
+  `amount` DECIMAL(8,2) UNSIGNED NOT NULL,
+  PRIMARY KEY (`isin`, `marketId`),
+  INDEX `fk_Open_Market1_idx` (`marketId` ASC),
+  CONSTRAINT `fk_Open_Security`
+    FOREIGN KEY (`isin`)
+    REFERENCES `FinancialMarkets`.`Security` (`isin`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Open_Market1`
+    FOREIGN KEY (`marketId`)
+    REFERENCES `FinancialMarkets`.`Market` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `FinancialMarkets`.`High`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `FinancialMarkets`.`High` (
+  `isin` CHAR(12) NOT NULL,
+  `marketId` INT NOT NULL,
+  `amount` DECIMAL(8,2) UNSIGNED NOT NULL,
+  PRIMARY KEY (`isin`, `marketId`),
+  INDEX `fk_High_Market1_idx` (`marketId` ASC),
+  CONSTRAINT `fk_High_Security1`
+    FOREIGN KEY (`isin`)
+    REFERENCES `FinancialMarkets`.`Security` (`isin`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_High_Market1`
+    FOREIGN KEY (`marketId`)
+    REFERENCES `FinancialMarkets`.`Market` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `FinancialMarkets`.`Low`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `FinancialMarkets`.`Low` (
+  `isin` CHAR(12) NOT NULL,
+  `marketId` INT NOT NULL,
+  `amount` DECIMAL(8,2) UNSIGNED NOT NULL,
+  PRIMARY KEY (`isin`, `marketId`),
+  INDEX `fk_Low_Market1_idx` (`marketId` ASC),
+  CONSTRAINT `fk_Low_Security1`
+    FOREIGN KEY (`isin`)
+    REFERENCES `FinancialMarkets`.`Security` (`isin`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Low_Market1`
+    FOREIGN KEY (`marketId`)
+    REFERENCES `FinancialMarkets`.`Market` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `FinancialMarkets`.`Close`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `FinancialMarkets`.`Close` (
+  `isin` CHAR(12) NOT NULL,
+  `marketId` INT NOT NULL,
+  `amount` DECIMAL(8,2) UNSIGNED NOT NULL,
+  PRIMARY KEY (`isin`, `marketId`),
+  INDEX `fk_Close_Market1_idx` (`marketId` ASC),
+  CONSTRAINT `fk_Close_Security1`
+    FOREIGN KEY (`isin`)
+    REFERENCES `FinancialMarkets`.`Security` (`isin`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Close_Market1`
+    FOREIGN KEY (`marketId`)
+    REFERENCES `FinancialMarkets`.`Market` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `FinancialMarkets`.`Volume`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `FinancialMarkets`.`Volume` (
+  `isin` CHAR(12) NOT NULL,
+  `marketId` INT NOT NULL,
+  `amount` BIGINT NOT NULL,
+  PRIMARY KEY (`isin`, `marketId`),
+  INDEX `fk_Volume_Market1_idx` (`marketId` ASC),
+  UNIQUE INDEX `amount_UNIQUE` (`amount` ASC),
+  CONSTRAINT `fk_Volume_Security1`
+    FOREIGN KEY (`isin`)
+    REFERENCES `FinancialMarkets`.`Security` (`isin`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Volume_Market1`
+    FOREIGN KEY (`marketId`)
+    REFERENCES `FinancialMarkets`.`Market` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
