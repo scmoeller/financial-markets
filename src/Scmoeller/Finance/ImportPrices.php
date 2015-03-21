@@ -60,7 +60,7 @@ class ImportPrices
      */
     public function execute() 
     {
-        $url = "http://ichart.finance.yahoo.com/table.csv?s=AB1.DE&c=2013&a=0&b=1&f=2013&d=11&e=31&g=d";
+        $url = $this->parseUrl();
         
         $prices = [];
         
@@ -75,5 +75,12 @@ class ImportPrices
         fclose($handle);
         
         return $prices;
+    }
+    
+    protected function parseUrl()
+    {
+        $url = "http://ichart.finance.yahoo.com/table.csv?s=AB1.DE&c=2013&a=0&b=1&f=2013&d=11&e=31&g=d";
+        
+        return $url;
     }
 }
