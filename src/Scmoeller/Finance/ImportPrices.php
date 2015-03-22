@@ -1,11 +1,5 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace Scmoeller\Finance;
 
 use DateTime;
@@ -42,6 +36,14 @@ class ImportPrices
      */
     protected $endDate;
     
+    /**
+     * Creates the Command.
+     * 
+     * @param \Scmoeller\Finance\Security $security Security
+     * @param \Scmoeller\Finance\Market $market Market
+     * @param DateTime $startDate Startdate
+     * @param DateTime $endDate Enddate
+     */
     public function __construct(Security $security, Market $market, DateTime $startDate, DateTime $endDate) 
     {
         $this->security = $security;
@@ -77,10 +79,32 @@ class ImportPrices
         return $prices;
     }
     
+    /**
+     * Parses the URL.
+     * 
+     * @return string URL
+     */
     protected function parseUrl()
     {
-        $url = "http://ichart.finance.yahoo.com/table.csv?s=AB1.DE&c=2013&a=0&b=1&f=2013&d=11&e=31&g=d";
+        $baseUrl = "http://ichart.finance.yahoo.com/table.csv?";
         
-        return $url;
+        $startYear = $this->startDate->format('Y');
+        
+        $startMonth = (int) $this->startDate->format('m') - 1;
+        
+        $startDay = (int) $this->startDate->format('d');
+        
+        $endYear = $this->endDate->format('Y');
+        
+        $endMonth = (int) $this->endDate->format('m') - 1;
+        
+        $endDay = (int) $this->endDate->format('d');
+        
+        $query =    "s={$this->security->getAbbrevation()}." .
+                    "{$this->market->getSymbol()}&" .
+                    "c=$startYear&a=$startMonth&b=$startDay&" . 
+                    "f={$endYear}&d={$endMonth}&e={$endDay}&g=d";
+        
+        return $baseUrl . $query;
     }
 }
