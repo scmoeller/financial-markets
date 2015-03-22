@@ -2,13 +2,11 @@
 
 use Scmoeller\Finance\ImportPrices;
 use Scmoeller\Finance\Security;
+use Scmoeller\Finance\Market;
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 require_once 'src/Scmoeller/Finance/ImportPrices.php';
+require_once 'src/Scmoeller/Finance/Security.php';
+require_once 'src/Scmoeller/Finance/Market.php';
 
 $security = new Security("DE0008232125", "Deutsche Lufthansa", "LHA");
 
@@ -20,4 +18,6 @@ $endDate = new DateTime('2015-01-30');
 
 $import = new ImportPrices($security, $market, $startDate, $endDate);
 
-$import->execute();
+$prices = $import->execute();
+
+print_r($prices);
